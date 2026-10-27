@@ -1,0 +1,12 @@
+[Unit]
+Description=Unhardened Legacy Background Daemon
+After=network.target
+
+[Service]
+Type=simple
+# Unhardened service: executes as root with unrestricted host privileges
+ExecStart=/usr/bin/legacy-daemon
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

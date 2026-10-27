@@ -1,0 +1,28 @@
+# Maintainer: Security Auditor <auditor@archlinux.org>
+pkgname=aur-crypt-tool
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Cryptographic verification and signing utility for Arch Linux"
+arch=('x86_64')
+url="https://github.com/crypt-security/crypt-tool"
+license=('GPL3')
+depends=('glibc' 'openssl>=3.0')
+makedepends=('cmake' 'ninja')
+source=("https://github.com/crypt-security/crypt-tool/releases/download/v${pkgver}/crypt-tool-${pkgver}.tar.gz")
+sha256sums=('a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0')
+
+build() {
+    cd "${srcdir}/crypt-tool-${pkgver}"
+    cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+    ninja -C build
+}
+
+check() {
+    cd "${srcdir}/crypt-tool-${pkgver}"
+    ninja -C build test
+}
+
+package() {
+    cd "${srcdir}/crypt-tool-${pkgver}"
+    DESTDIR="${pkgdir}" ninja -C build install
+}

