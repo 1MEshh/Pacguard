@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pacguard"
+version = "1.0.0"
+description = "Arch Linux PKGBUILD supply-chain security auditor, version-diff hijack detector, and weighted systemd sandboxing scorer."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "1MEshh", email = "152591660+1MEshh@users.noreply.github.com"}
+]
+keywords = ["archlinux", "pkgbuild", "aur", "security", "supply-chain", "systemd", "sandboxing", "sarif"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+dependencies = []
+
+[project.scripts]
+pacguard = "pacguard.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pacguard*"]
+
+[project.urls]
+Homepage = "https://github.com/1MEshh/Pacguard"
+Repository = "https://github.com/1MEshh/Pacguard"
